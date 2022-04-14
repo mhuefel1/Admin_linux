@@ -1,0 +1,55 @@
+#!/bin/bash
+#Autor: Manuel Huerta Félix
+#UNISITE/ISC10D
+#Trabajo para derecho a exámen final Linux
+
+nombre=""
+carpeta=/etc/passwd
+usuario=""
+passwd=""
+grup1=""
+grup2=""
+opc=""
+existe=""
+
+clear
+echo -e "Programa de consulta usuario y sus grupos\n"
+read -p "Deme el usuario que deceas consultar: " usuario
+consulta=`grep -E ^$usuario: "$carpeta"`
+
+if [ -z "$consulta" ];
+	then
+	     existe="No"
+	else
+	     existe="Si"
+fi
+
+if [ $existe == "No" ];
+	then
+	     read -n 1 -p "El usuario no existe, ¿desea crearlo?  s/n " $opc
+	     echo -e "\n"
+			
+	     if [ "$opc" == "s" ] 
+
+	          then
+		     read -p "Deme el nombre completo del usuario: " nombre
+		     echo -e "\n"
+		     read -p "Deme la contraeña: " passwd
+		     echo -e "\n"
+		     read -p "¿Cuál sería su grupo primario?: " grup1
+		     echo -e "\n"
+		     read -p "¿Cuál sería su grupo secundario?: " grup2
+		     echo -e "\n"
+		     sudo useradd -c "$nombre" -p "$passwd" -g "$grup1" -G "$grup2" $usuario
+		     
+		     echo "El usuario está creado"
+		     exit
+		
+	           else
+		     echo -e "\nHasta luego"
+		     exit
+	      fi
+else
+	echo "Estos son los grupos a los que pertenece el usuario "
+	groups $usuario
+fi
